@@ -55,7 +55,7 @@
     <div class="checkbox mb-3">
       <label>
         <a href="#">Forgot your ID or Password?</a> &nbsp;
-        <a href="#">sign up</a>
+        <a href="signup">Sign up</a>
       </label>
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>

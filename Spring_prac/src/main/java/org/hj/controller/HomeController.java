@@ -1,6 +1,6 @@
 package org.hj.controller;
 
-import java.text.DateFormat;
+//import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -31,10 +31,10 @@ public class HomeController {
 	}
 	
 	// 로그인 페이지
-		@RequestMapping(value = "/login", method = RequestMethod.GET)
-		public String login () {
-			System.out.println("move to login page");
-			return "member/login";
-		}
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login () {
+		System.out.println("move to login page");
+		return "member/login";
+	}
 	
 }
