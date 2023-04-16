@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hj.mapper.LoginMapper">
+	<insert id="memreg">
+		insert into member(id, password, name, phone, email)
+		value(#{id},#{password},#{name},#{phone},#{email})
+	</insert>
+	
+	<select id="login" resultType="org.hj.model.LoginVO">
+		select id, password
+  		from member
+  		where id=#{id} and password=#{password}
+	</select>
+	
+	<select id="memlist" resultType="org.hj.model.LoginVO">
+		select *
+		from member
+	</select>
+	
+	<select id="memdetail" resultType="org.hj.model.LoginVO">
+		select *
+		from member
+		where id=#{id}
+	</select>
+	
+	<update id="memberModify">
+		update member
+		set name =#{name},
+		password =#{password},
+		phone =#{phone},
+		email =#{email}
+		where id =#{id}
+	</update>
+	
+	<delete id="memberRemove">
+		delete from member where id=#{id}
+	</delete>
+</mapper>

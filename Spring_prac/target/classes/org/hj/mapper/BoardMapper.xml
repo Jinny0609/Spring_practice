@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.hj.mapper.BoardMapper">
+<!--   	제목, 내용을 board테이블 insert, Board 테이블이 비어있을때도 1부터 시작 -->
+<!--   	<insert id="write" parameterType="org.hj.model.BoardVO"> -->
+<!-- 	    <selectKey keyProperty="bno" order="BEFORE" resultType="int"> -->
+<!-- 	        select COALESCE(max(bno), 0) + 1 as bno from board -->
+<!-- 	    </selectKey> -->
+<!-- 	    insert into board(bno, title, content, cnt, id) -->
+<!-- 	    values (#{bno}, #{title}, #{content}, #{cnt}, #{id}) -->
+<!-- 	</insert> -->
+	
+<!--   	제목, 내용을 board테이블 insert -->
+  	<insert id = "write">
+  		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
+  			select max(bno)+1 bno
+  			from board
+  		</selectKey>
+  		
+  		insert into board(title, id, content)
+  		values(#{title},#{id},#{content})
+<!--   		insert into board(bno, title, id, content) -->
+<!--   		values(#{bno},#{title},#{id},#{content}) -->
+  	</insert>
+  	
+  	<select id="list" resultType="org.hj.model.BoardVO">
+  		select *
+  		from(
+  			select @rownum:=@rownum+1 rownum, b.*
+  			from board b, (select @rownum:=0) as tmp
+  			<if test="keyword != null">
+  				<choose>
+  					<when test="type=='T'.toString()">
+  						where title like concat('%',#{keyword},'%')
+  					</when>
+  					<when  test="type=='C'.toString()">
+  						where content like concat('%',#{keyword},'%')
+  					</when>
+  					<otherwise>
+  						where title like concat('%',#{keyword},'%')
+  					    OR content like concat('%',#{keyword}, '%')
+  					</otherwise>
+  				</choose>
+  			</if>
+  			order by bno desc
+  		) as boardlist
+  		<![CDATA[
+  		where rownum > (#{pageNum}-1)*#{amount} and rownum <= #{pageNum}*#{amount}
+  		]]>
+  	</select>
+  	
+  	<select id="detail" resultType="org.hj.model.BoardVO">
+  		select * from board
+  		where bno=#{bno}
+  	</select>
+  	
+  	<update id="cntup">
+  		update board
+  		set cnt = cnt + 1
+  		where bno =#{bno}
+  	</update>
+  	
+  	<update id="modify">
+  		update board
+  		set title=#{title}, content=#{content}
+  		where bno=#{bno}
+  	</update>
+  	
+  	<delete id="remove">
+  		delete from board
+  		where bno=#{bno}
+  	</delete>
+  	
+  	<select id="total" resultType="int">
+  		select count(*) from board
+  		<if test="keyword != null">
+  		
+  		<choose>
+  			<when test="type=='T'.toString()">
+  				where title like concat('%',#{keyword},'%')
+  			</when>
+  			<when test="type=='C'.toString()">
+  				where content like concat('%',#{keyword},'%')
+  			</when>
+  			<otherwise>
+  				where title like concat('%',#{keyword},'%')
+  				OR content like concat('%',#{keyword},'%')
+  			</otherwise>
+  		</choose>
+  		
+  		</if>
+  	</select>
+  </mapper>
